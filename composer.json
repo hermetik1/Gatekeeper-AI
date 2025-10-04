@@ -1,6 +1,12 @@
 {
-  "name": "roman/gatekeeper-ai",
+  "name": "kikraft/gatekeeper-ai",
   "type": "wordpress-plugin",
+  "authors": [
+    {
+      "name": "ki Kraft",
+      "homepage": "https://kikraft.at/"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "AIPM\\": "src/"

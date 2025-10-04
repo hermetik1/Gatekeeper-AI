@@ -2,9 +2,11 @@
   "name": "gatekeeper-ai",
   "version": "0.1.0",
   "private": true,
+  "author": "ki Kraft (https://kikraft.at/)",
   "scripts": {
     "start": "wp-scripts start",
-    "build": "wp-scripts build"
+    "build": "wp-scripts build",
+    "make-pot": "wp i18n make-pot . languages/gatekeeper-ai.pot --domain=gatekeeper-ai"
   },
   "devDependencies": {
     "@wordpress/scripts": "^30.0.0"

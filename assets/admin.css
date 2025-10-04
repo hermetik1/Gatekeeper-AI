@@ -1,5 +1,12 @@
 /* Gatekeeper AI Admin Styles */
 
+/* CSS Variables for branding (TODO: CI-Farben & Logo nachreichen) */
+:root {
+    --gkai-brand: #111;
+    --gkai-brand-light: #757575;
+    --gkai-accent: #0073aa;
+}
+
 .gkai-settings {
     max-width: 1200px;
 }
@@ -44,6 +51,25 @@
     font-size: 48px;
     width: 48px;
     height: 48px;
+}
+
+/* Admin footer branding */
+.gkai-admin-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #dcdcde;
+    color: var(--gkai-brand-light);
+    font-size: 13px;
+}
+
+.gkai-admin-footer a {
+    color: var(--gkai-brand);
+    text-decoration: none;
+}
+
+.gkai-admin-footer a:hover {
+    color: var(--gkai-accent);
+    text-decoration: underline;
 }
 
 /* Responsive adjustments */
