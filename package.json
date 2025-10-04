@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "wp-scripts start",
-    "build": "wp-scripts build"
+    "build": "wp-scripts build",
+    "make-pot": "wp i18n make-pot . languages/gatekeeper-ai.pot --exclude=node_modules,vendor"
   },
   "devDependencies": {
     "@wordpress/scripts": "^30.0.0"

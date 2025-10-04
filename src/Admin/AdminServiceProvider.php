@@ -34,5 +34,29 @@ class AdminServiceProvider
         
         // Handle debug page AJAX actions
         DebugPage::handle_ajax();
+
+        // Add admin footer text
+        add_filter('admin_footer_text', [self::class, 'admin_footer_text']);
+    }
+
+    /**
+     * Customize admin footer text on Gatekeeper AI pages.
+     *
+     * @param string $text Default footer text.
+     * @return string Modified footer text.
+     */
+    public static function admin_footer_text(string $text): string
+    {
+        $screen = get_current_screen();
+        
+        // Only show on Gatekeeper AI pages
+        if ($screen && (strpos($screen->id, 'gatekeeper-ai') !== false)) {
+            $text = sprintf(
+                __('Built by %s', 'gatekeeper-ai'),
+                '<a href="https://kikraft.at/" target="_blank" rel="noopener noreferrer">ki Kraft</a>'
+            );
+        }
+        
+        return $text;
     }
 }

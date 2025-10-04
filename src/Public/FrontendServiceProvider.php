@@ -3,6 +3,7 @@ namespace AIPM\Public_;
 
 use AIPM\Public_\Output\MetaTags;
 use AIPM\Public_\Badges\CredentialBadge;
+use AIPM\Public\BotDetectionMiddleware;
 use AIPM\Policies\HeadersGenerator;
 
 /**
@@ -25,5 +26,8 @@ class FrontendServiceProvider
         
         // Register C2PA badge shortcode
         add_action('init', [CredentialBadge::class, 'register_shortcode']);
+        
+        // Register bot detection and logging middleware
+        BotDetectionMiddleware::register();
     }
 }
