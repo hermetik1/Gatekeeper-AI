@@ -74,6 +74,18 @@ class SettingsPage
         echo '<div id="gkai-app">';
         echo '<p>' . esc_html__('Loading…', 'gatekeeper-ai') . '</p>';
         echo '</div>';
+        
+        // Footer with ki Kraft branding
+        echo '<div class="gkai-admin-footer">';
+        echo '<p>';
+        /* translators: %s: Link to ki Kraft website */
+        printf(
+            esc_html__('Built by %s', 'gatekeeper-ai'),
+            '<a href="' . esc_url('https://kikraft.at/') . '" target="_blank" rel="noopener">' . esc_html(GKAI_BRAND) . '</a>'
+        );
+        echo '</p>';
+        echo '</div>';
+        
         echo '</div>';
     }
 }

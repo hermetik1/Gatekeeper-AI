@@ -1,5 +1,5 @@
 === Gatekeeper AI ===
-Contributors: hermetik1
+Contributors: kikraft
 Tags: ai, crawler, robots, c2pa, content-provenance
 Requires at least: 6.4
 Tested up to: 6.7
@@ -8,11 +8,11 @@ Stable tag: 0.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Granular control for AI crawlers with content provenance (C2PA-Light) in WordPress.
+Granular control for AI crawlers with content provenance (C2PA-Light) in WordPress. By ki Kraft (Non-Profit, Österreich).
 
 == Description ==
 
-Gatekeeper AI gives you complete control over which AI bots can access your content, while also providing content provenance tracking for uploaded media.
+Gatekeeper AI gives you complete control over which AI bots can access your content, while also providing content provenance tracking for uploaded media. Developed and maintained by ki Kraft, a non-profit organization based in Austria.
 
 = Key Features =
 
@@ -78,6 +78,18 @@ Manifests are stored as JSON files in `/wp-content/uploads/gatekeeper-ai/{attach
 = How do I display the C2PA badge? =
 
 Use the shortcode `[gkai_badge id="123"]` where 123 is the attachment ID. You can also use the helper function `\AIPM\Public_\Badges\CredentialBadge::get_badge($attachment_id)` in your theme.
+
+== Privacy ==
+
+Gatekeeper AI respects your privacy and data sovereignty:
+
+* **No External Calls**: The plugin operates entirely locally. No data is sent to external services (except for optional future bot directory updates).
+* **No Telemetry**: We do not collect usage statistics or analytics.
+* **Local Data Storage**: All policies, settings, and C2PA manifests are stored in your WordPress database and uploads folder.
+* **Optional Logging**: Activity logging is optional and disabled by default. When enabled, logs are stored locally and contain only non-personal technical data (bot user agents, paths accessed).
+* **No Personal Data**: The plugin does not collect, process, or store any personal data from your site visitors.
+
+This plugin is developed by ki Kraft, a non-profit organization committed to ethical technology practices.
 
 == Screenshots ==
 

@@ -1,1 +1,13 @@
-# POT placeholder
+# Copyright (C) 2025 ki Kraft
+# This file is distributed under the same license as the Gatekeeper AI plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Gatekeeper AI 0.1.0\n"
+"Report-Msgid-Bugs-To: https://kikraft.at/\n"
+"Last-Translator: ki Kraft <team@kikraft.at>\n"
+"Language-Team: ki Kraft\n"
+"Language: de_AT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
