@@ -102,35 +102,54 @@ class ManifestBuilder
         $upload_dir = wp_upload_dir();
         $base_dir = $upload_dir['basedir'];
         
-        // Create gatekeeper-ai directory
+        // Validate base directory
+        if (!is_dir($base_dir) || !is_writable($base_dir)) {
+            error_log('Gatekeeper AI: Upload directory not writable: ' . $base_dir);
+            return false;
+        }
+        
+        // Create gatekeeper-ai directory with secure permissions
         $gkai_dir = $base_dir . '/gatekeeper-ai';
         if (!file_exists($gkai_dir)) {
             if (!wp_mkdir_p($gkai_dir)) {
                 error_log('Gatekeeper AI: Failed to create manifest directory: ' . $gkai_dir);
                 return false;
             }
+            
+            // Verify directory is writable
+            if (!is_dir($gkai_dir) || !is_writable($gkai_dir)) {
+                error_log('Gatekeeper AI: Manifest directory not writable: ' . $gkai_dir);
+                return false;
+            }
+        }
+
+        // Sanitize attachment ID to prevent directory traversal
+        $safe_id = absint($attachment_id);
+        if ($safe_id <= 0) {
+            error_log('Gatekeeper AI: Invalid attachment ID: ' . $attachment_id);
+            return false;
         }
 
         // Create manifest file path
-        $manifest_file = $gkai_dir . '/' . $attachment_id . '.json';
+        $manifest_file = $gkai_dir . '/' . $safe_id . '.json';
 
         // Encode manifest as JSON
         $json = wp_json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         if ($json === false) {
-            error_log('Gatekeeper AI: Failed to encode manifest for attachment ' . $attachment_id);
+            error_log('Gatekeeper AI: Failed to encode manifest for attachment ' . $safe_id);
             return false;
         }
 
-        // Save to file
+        // Save to file with error checking
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-        $result = file_put_contents($manifest_file, $json);
+        $result = file_put_contents($manifest_file, $json, LOCK_EX);
         if ($result === false) {
             error_log('Gatekeeper AI: Failed to write manifest file: ' . $manifest_file);
             return false;
         }
 
         // Store manifest path in post meta for easy retrieval
-        update_post_meta($attachment_id, '_gkai_c2pa_manifest', $manifest_file);
+        update_post_meta($safe_id, '_gkai_c2pa_manifest', $manifest_file);
 
         return true;
     }
