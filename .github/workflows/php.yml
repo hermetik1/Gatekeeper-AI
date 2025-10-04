@@ -1,0 +1,59 @@
+name: PHP Quality Checks
+
+on:
+  push:
+    branches: [ main, develop, 'feat/**' ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-pot:
+    name: Build POT File
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Non-blocking
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Setup WP-CLI
+        run: |
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x wp-cli.phar
+          sudo mv wp-cli.phar /usr/local/bin/wp
+          
+      - name: Build POT file
+        run: npm run make-pot
+        
+      - name: Check POT file
+        run: |
+          if [ -f languages/gatekeeper-ai.pot ]; then
+            echo "✓ POT file generated successfully"
+            wc -l languages/gatekeeper-ai.pot
+          else
+            echo "✗ POT file not found"
+            exit 1
+          fi
+
+  verify-plugin:
+    name: Verify Plugin Structure
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run verification script
+        run: |
+          if [ -f bin/verify.sh ]; then
+            chmod +x bin/verify.sh
+            ./bin/verify.sh
+          else
+            echo "Verification script not found, skipping"
+          fi
