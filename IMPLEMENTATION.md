@@ -376,3 +376,147 @@ GPLv2 or later
 
 **Status**: Ready for production testing and deployment
 **Last Updated**: 2025
+
+---
+
+## Version 0.1.1 Updates
+
+### Admin Navigation Restructuring
+- **Top-Level Menu**: Changed from Tools submenu to dedicated top-level "Gatekeeper AI" menu
+  - Icon: `dashicons-shield-alt`
+  - Position: 30
+  - File: `src/Admin/SettingsPage.php`
+  
+- **Submenus**:
+  1. **Dashboard**: Main settings page with 7 tabs (same callback as top-level)
+  2. **GKAI Debug**: Debug dashboard for development and troubleshooting
+  
+- **Asset Loading**: Enhanced to accept both hook patterns:
+  - `toplevel_page_gatekeeper-ai`
+  - `gatekeeper-ai_page_gatekeeper-ai`
+
+### i18n Enhancements
+- Added `wp_set_script_translations()` for JavaScript translation support
+- All PHP strings verified to use 'gatekeeper-ai' textdomain
+- Translation-ready for complete internationalization
+- Path: `dirname(GKAI_FILE) . '/languages'`
+
+### Security Hardening
+
+#### Options Sanitization (src/Support/Options.php)
+- **Deep sanitization** for all settings arrays:
+  - Bot names: `sanitize_text_field()` with empty value filtering
+  - Booleans: Proper type casting for all boolean options
+  - Post IDs: `absint()` with validation (must be > 0)
+  - Route patterns: XSS prevention and empty pattern removal
+  - Array deduplication with `array_unique()`
+
+#### REST API Validation (src/REST/Routes.php)
+- **Input whitelisting**: Only accept known top-level keys
+  - Allowed: `policies`, `c2pa`, `logging`, `debug`
+  - Unknown keys filtered out before processing
+- Enhanced validation with proper error messages
+
+#### Filesystem Security
+Enhanced directory creation and file operations:
+
+**Activation.php**:
+- Base directory validation (exists and writable)
+- Directory verification after creation
+- Error checking on .htaccess and index.php creation
+- Detailed error messages with paths
+
+**ManifestBuilder.php**:
+- Directory validation before file operations
+- Attachment ID sanitization with `absint()`
+- Atomic writes using `LOCK_EX` flag
+- Enhanced error logging
+
+**Logger.php**:
+- Base directory validation
+- Directory writability checks
+- Graceful degradation if logging fails
+- Protected log directory with .htaccess
+
+### Accessibility Improvements
+- **Active tabs**: Added `aria-current="page"` to active navigation tabs
+- **Keyboard navigation**: Tab order preserved and functional
+- **Focus management**: CSS focus states maintained
+
+### Testing Infrastructure
+Created comprehensive test suite:
+
+**tests/test-admin-menu.php**:
+- Verifies top-level menu registration
+- Checks dashicons-shield-alt icon
+- Validates Dashboard and Debug submenus
+- Ensures proper parent-child relationships
+
+**tests/test-options-sanitizing.php**:
+- Tests bot name sanitization (XSS prevention)
+- Validates boolean type casting
+- Checks route pattern sanitization
+- Tests per-post policy validation
+- Verifies post ID filtering (negative/non-numeric removal)
+
+All tests pass successfully.
+
+### Privacy & Multisite
+
+#### Privacy Guarantees
+- No telemetry or phone-home functionality
+- All data stored locally in WordPress database
+- Optional logging: No IP addresses, no personal data
+- Logs: timestamp, path, bot name, decision only
+- Data location clearly documented
+
+#### Multisite Support
+- Settings stored per-site (not network-wide)
+- Independent bot policies per site
+- Per-site log files in separate directories
+- Network activation compatible
+- Site administrators manage their own settings
+
+### File Structure Changes
+```
+/gatekeeper-ai/
+├── src/
+│   ├── Admin/
+│   │   ├── SettingsPage.php    (modified - top-level menu)
+│   │   └── DebugPage.php        (modified - submenu + textdomain)
+│   ├── Support/
+│   │   └── Options.php          (enhanced - deep sanitization)
+│   ├── REST/
+│   │   └── Routes.php           (enhanced - input whitelisting)
+│   ├── Activation.php           (enhanced - filesystem security)
+│   ├── C2PA/
+│   │   └── ManifestBuilder.php  (enhanced - secure file operations)
+│   └── Logging/
+│       └── Logger.php           (enhanced - directory validation)
+├── tests/                       (new)
+│   ├── test-admin-menu.php
+│   └── test-options-sanitizing.php
+└── readme.txt                   (updated - 0.1.1 changelog)
+```
+
+### Upgrade Path
+- **From 0.1.0 to 0.1.1**: Automatic
+  - Existing settings preserved
+  - Menu location changes automatically
+  - No data migration required
+  - Backwards compatible
+
+### Known Issues & Limitations
+- Tests are simple PHP scripts (not PHPUnit framework)
+- npm dependencies not installed by default
+- POT file needs manual update via `npm run make-pot`
+- No WordPress Coding Standards enforcement yet (phpcs optional)
+
+### Future Improvements (Post-0.1.1)
+- PHPUnit integration for proper unit testing
+- Vitest setup for JavaScript testing
+- WordPress Coding Standards (WPCS) enforcement
+- Automated POT file generation in CI/CD
+- Enhanced REST API rate limiting
+- External HTTP request handling with timeouts
+

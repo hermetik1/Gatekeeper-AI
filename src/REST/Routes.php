@@ -35,15 +35,19 @@ class Routes
                         return new \WP_Error('invalid_data', 'Invalid data format', ['status' => 400]);
                     }
 
+                    // Whitelist allowed top-level keys
+                    $allowed_keys = ['policies', 'c2pa', 'logging', 'debug'];
+                    $filtered_data = array_intersect_key($data, array_flip($allowed_keys));
+
                     // Validate policies if present
-                    if (isset($data['policies'])) {
-                        $validation = \AIPM\Policies\PolicyManager::validate($data['policies']);
+                    if (isset($filtered_data['policies'])) {
+                        $validation = \AIPM\Policies\PolicyManager::validate($filtered_data['policies']);
                         if (!$validation['valid']) {
                             return new \WP_Error('validation_failed', implode('; ', $validation['errors']), ['status' => 400]);
                         }
                     }
                     
-                    Options::update($data);
+                    Options::update($filtered_data);
                     return Options::get();
                 }
             ]

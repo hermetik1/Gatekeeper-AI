@@ -71,7 +71,7 @@ class DebugToolbar
                 '<span class="ab-icon dashicons-before dashicons-admin-tools"></span>GKAI Debug <span class="gkai-badge">%s</span>',
                 number_format($execution_time * 1000, 2) . 'ms'
             ),
-            'href' => admin_url('tools.php?page=gatekeeper-ai-debug'),
+            'href' => admin_url('admin.php?page=gatekeeper-ai-debug'),
         ]);
 
         // Performance submenu
@@ -112,7 +112,7 @@ class DebugToolbar
             'parent' => 'gkai-debug',
             'id' => 'gkai-debug-settings',
             'title' => 'View Debug Dashboard →',
-            'href' => admin_url('tools.php?page=gatekeeper-ai-debug'),
+            'href' => admin_url('admin.php?page=gatekeeper-ai-debug'),
         ]);
     }
 

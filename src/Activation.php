@@ -149,23 +149,53 @@ class Activation
     private static function create_directories(): void
     {
         $upload_dir = wp_upload_dir();
+        $base_dir = $upload_dir['basedir'];
+
+        // Validate base upload directory exists and is writable
+        if (!is_dir($base_dir) || !is_writable($base_dir)) {
+            throw new \Exception(
+                sprintf(
+                    'WordPress uploads directory is not writable: %s',
+                    $base_dir
+                )
+            );
+        }
         
         $directories = [
-            'logs' => $upload_dir['basedir'] . '/gatekeeper-ai-logs',
-            'c2pa' => $upload_dir['basedir'] . '/gatekeeper-ai',
+            'logs' => $base_dir . '/gatekeeper-ai-logs',
+            'c2pa' => $base_dir . '/gatekeeper-ai',
         ];
 
         foreach ($directories as $name => $path) {
             if (!file_exists($path)) {
+                // Create directory with secure permissions
                 if (!wp_mkdir_p($path)) {
                     throw new \Exception(
                         sprintf('Failed to create %s directory: %s', $name, $path)
                     );
                 }
                 
-                // Add protection files
-                file_put_contents($path . '/.htaccess', "deny from all\n");
-                file_put_contents($path . '/index.php', "<?php\n// Silence is golden.\n");
+                // Verify the directory was created successfully
+                if (!is_dir($path) || !is_writable($path)) {
+                    throw new \Exception(
+                        sprintf('Directory %s is not writable: %s', $name, $path)
+                    );
+                }
+                
+                // Add protection files with error checking
+                $htaccess_content = "deny from all\n";
+                if (file_put_contents($path . '/.htaccess', $htaccess_content) === false) {
+                    Logger::warning(
+                        sprintf('Failed to create .htaccess protection for %s', $name)
+                    );
+                }
+                
+                $index_content = "<?php\n// Silence is golden.\n";
+                if (file_put_contents($path . '/index.php', $index_content) === false) {
+                    Logger::warning(
+                        sprintf('Failed to create index.php protection for %s', $name)
+                    );
+                }
             }
         }
     }

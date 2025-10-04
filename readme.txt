@@ -4,7 +4,7 @@ Tags: ai, crawler, robots, c2pa, content-provenance
 Requires at least: 6.4
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,7 +42,7 @@ Gatekeeper AI gives you complete control over which AI bots can access your cont
 * Ring buffer storage (max 5000 entries)
 
 **Modern Admin Interface:**
-* React-based settings page with 7 tabs:
+* React-based settings page with 7 tabs (accessible via **Gatekeeper AI** in admin menu):
   - **Policies**: Global bot allow/block with presets and preview
   - **Routes**: Path-based rules with wildcard support
   - **Per-Post**: Instructions for post-level overrides
@@ -50,6 +50,7 @@ Gatekeeper AI gives you complete control over which AI bots can access your cont
   - **Logs**: Access logs, statistics, and filtering
   - **Tools**: Policy test, export/import, bot directory
   - **About**: ki Kraft info, privacy statement
+* Debug dashboard at **Gatekeeper AI → GKAI Debug**
 * Per-post metabox for fine-grained control
 * REST API integration with proper security
 * Policy validation and error messages
@@ -58,8 +59,11 @@ Gatekeeper AI gives you complete control over which AI bots can access your cont
 * No telemetry or external data collection
 * All data stays on your WordPress installation
 * Optional logging stores only: timestamp, path, bot name, and decision
+* Logs and manifests stored securely in `/wp-content/uploads/gatekeeper-ai-logs/` and `/wp-content/uploads/gatekeeper-ai/`
+* Protected directories with .htaccess and index.php files
 * Nonce verification and capability checks throughout
 * Input sanitization and output escaping
+* Deep sanitization for all settings data
 
 = Policy Priority =
 
@@ -88,7 +92,7 @@ Policies are merged with the following priority (deterministic):
 
 1. Upload the plugin files to `/wp-content/plugins/gatekeeper-ai/`
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Navigate to Tools → Gatekeeper AI to configure settings
+3. Navigate to **Gatekeeper AI** in the admin menu to configure settings
 
 
 == Frequently Asked Questions ==
@@ -107,7 +111,7 @@ Currently supported bots:
 
 = How do I get started? =
 
-1. Navigate to **Tools → Gatekeeper AI**
+1. Navigate to **Gatekeeper AI** in the admin menu
 2. In the **Policies** tab, choose a preset or select individual bots
 3. Click "Preview robots.txt" to see the generated rules
 4. Save your settings
@@ -135,9 +139,19 @@ C2PA-Light is a simplified content provenance system. When enabled, the plugin c
 * AI-assisted flag
 * Source URL
 
-= Where are manifests stored? =
+= Does the plugin work with Multisite? =
 
-Manifests are stored as JSON files in `/wp-content/uploads/gatekeeper-ai/{attachment-id}.json`
+Yes! Gatekeeper AI is Multisite-compatible:
+* Settings are stored per-site (not network-wide)
+* Each site in the network has its own bot policies and logs
+* Network administrators can activate the plugin network-wide
+* Site administrators manage their own Gatekeeper AI settings
+
+= Where are logs and manifests stored? =
+
+* **Logs**: `/wp-content/uploads/gatekeeper-ai-logs/debug.log`
+* **C2PA Manifests**: `/wp-content/uploads/gatekeeper-ai/{attachment-id}.json`
+* Both directories are protected with .htaccess and index.php files to prevent direct access
 
 = How do I display the C2PA badge? =
 
@@ -195,6 +209,30 @@ Gatekeeper AI is developed by **[ki Kraft](https://kikraft.at/)**, a non-profit 
 4. Per-post metabox
 
 == Changelog ==
+
+= 0.1.1 =
+* **Admin Navigation Improvements**
+  - Changed to top-level admin menu "Gatekeeper AI" with dashicons-shield-alt icon
+  - Added Dashboard and GKAI Debug as submenus under Gatekeeper AI
+  - Improved admin menu structure and accessibility
+* **i18n Enhancements**
+  - Added wp_set_script_translations for JavaScript translations
+  - All strings use 'gatekeeper-ai' textdomain
+  - Ready for full translation support
+* **Security Hardening**
+  - Enhanced Options::update() with deep sanitization for arrays
+  - Added input whitelisting in REST API endpoints
+  - Improved filesystem operations with validation and error handling
+  - Better directory creation security (permissions, error checking)
+  - Atomic file writes with LOCK_EX flag
+  - Directory traversal prevention
+* **Accessibility Improvements**
+  - Added aria-current="page" to active tabs
+  - Better keyboard navigation support
+* **Testing Infrastructure**
+  - Added test-admin-menu.php to verify menu registration
+  - Added test-options-sanitizing.php to verify data sanitization
+  - All tests passing
 
 = 0.2.0 =
 * **Complete Feature Implementation**

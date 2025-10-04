@@ -71,23 +71,40 @@ class Logger
 
         // Determine log file path
         $upload_dir = wp_upload_dir();
-        $log_dir = $upload_dir['basedir'] . '/gatekeeper-ai-logs';
+        $base_dir = $upload_dir['basedir'];
+        
+        // Validate base directory
+        if (!is_dir($base_dir) || !is_writable($base_dir)) {
+            self::$enabled = false;
+            return;
+        }
+        
+        $log_dir = $base_dir . '/gatekeeper-ai-logs';
 
         // Create log directory if it doesn't exist
         if (!file_exists($log_dir)) {
-            wp_mkdir_p($log_dir);
+            if (!wp_mkdir_p($log_dir)) {
+                self::$enabled = false;
+                return;
+            }
             
-            // Add .htaccess to protect logs
-            file_put_contents(
-                $log_dir . '/.htaccess',
-                "deny from all\n"
-            );
+            // Verify directory is writable
+            if (!is_dir($log_dir) || !is_writable($log_dir)) {
+                self::$enabled = false;
+                return;
+            }
+            
+            // Add .htaccess to protect logs with error checking
+            $htaccess_content = "deny from all\n";
+            if (file_put_contents($log_dir . '/.htaccess', $htaccess_content) === false) {
+                error_log('Gatekeeper AI: Failed to create .htaccess for log directory');
+            }
             
             // Add index.php to prevent directory listing
-            file_put_contents(
-                $log_dir . '/index.php',
-                "<?php\n// Silence is golden.\n"
-            );
+            $index_content = "<?php\n// Silence is golden.\n";
+            if (file_put_contents($log_dir . '/index.php', $index_content) === false) {
+                error_log('Gatekeeper AI: Failed to create index.php for log directory');
+            }
         }
 
         self::$log_file = $log_dir . '/debug.log';

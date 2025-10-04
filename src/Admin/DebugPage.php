@@ -18,7 +18,7 @@ class DebugPage
     public static function menu(): void
     {
         add_submenu_page(
-            'tools.php',
+            \AIPM\Admin\SettingsPage::SLUG,
             __('Gatekeeper AI Debug', 'gatekeeper-ai'),
             __('GKAI Debug', 'gatekeeper-ai'),
             'manage_options',
@@ -82,7 +82,7 @@ class DebugPage
     public static function render(): void
     {
         if (!current_user_can('manage_options')) {
-            wp_die(__('You do not have sufficient permissions to access this page.'));
+            wp_die(__('You do not have sufficient permissions to access this page.', 'gatekeeper-ai'));
         }
 
         // Handle form submissions
@@ -96,13 +96,13 @@ class DebugPage
             <h1><?php esc_html_e('Gatekeeper AI - Debug Dashboard', 'gatekeeper-ai'); ?></h1>
             
             <h2 class="nav-tab-wrapper">
-                <a href="?page=gatekeeper-ai-debug&tab=logs" class="nav-tab <?php echo $tab === 'logs' ? 'nav-tab-active' : ''; ?>">
+                <a href="?page=gatekeeper-ai-debug&tab=logs" class="nav-tab <?php echo $tab === 'logs' ? 'nav-tab-active' : ''; ?>" <?php echo $tab === 'logs' ? 'aria-current="page"' : ''; ?>>
                     <?php esc_html_e('Logs', 'gatekeeper-ai'); ?>
                 </a>
-                <a href="?page=gatekeeper-ai-debug&tab=system" class="nav-tab <?php echo $tab === 'system' ? 'nav-tab-active' : ''; ?>">
+                <a href="?page=gatekeeper-ai-debug&tab=system" class="nav-tab <?php echo $tab === 'system' ? 'nav-tab-active' : ''; ?>" <?php echo $tab === 'system' ? 'aria-current="page"' : ''; ?>>
                     <?php esc_html_e('System Info', 'gatekeeper-ai'); ?>
                 </a>
-                <a href="?page=gatekeeper-ai-debug&tab=health" class="nav-tab <?php echo $tab === 'health' ? 'nav-tab-active' : ''; ?>">
+                <a href="?page=gatekeeper-ai-debug&tab=health" class="nav-tab <?php echo $tab === 'health' ? 'nav-tab-active' : ''; ?>" <?php echo $tab === 'health' ? 'aria-current="page"' : ''; ?>>
                     <?php esc_html_e('Health Check', 'gatekeeper-ai'); ?>
                 </a>
             </h2>
