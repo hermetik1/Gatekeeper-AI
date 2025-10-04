@@ -1,0 +1,2 @@
+<?php
+namespace AIPM\Policies; class RobotsTxtGenerator{ public static function output(): void { $p=PolicyManager::get(); $g=$p['global']??['allow'=>[],'block'=>[]]; header('Content-Type: text/plain; charset=utf-8'); $all=array_unique(array_merge($g['allow']??[], $g['block']??[])); if(empty($all)){ echo "User-agent: *\nAllow: /\n"; return; } foreach($all as $bot){ echo "User-agent: {$bot}\n"; if(in_array($bot,$g['block']??[],true)) echo "Disallow: /\n\n"; else echo "Allow: /\n\n"; } } }

@@ -1,0 +1,2 @@
+<?php
+namespace AIPM\Admin; class AdminServiceProvider{ public static function register(): void { if(is_admin()){ add_action('admin_menu',[SettingsPage::class,'menu']); add_action('admin_enqueue_scripts',[SettingsPage::class,'assets']); add_action('add_meta_boxes',['AIPM\\Admin\\MetaBoxes\\PostPolicyMetaBox','register']); add_action('save_post',['AIPM\\Admin\\MetaBoxes\\PostPolicyMetaBox','save']); } } }

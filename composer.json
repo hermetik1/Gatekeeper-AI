@@ -1,0 +1,12 @@
+{
+  "name": "roman/gatekeeper-ai",
+  "type": "wordpress-plugin",
+  "autoload": {
+    "psr-4": {
+      "AIPM\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^8.1"
+  }
+}
