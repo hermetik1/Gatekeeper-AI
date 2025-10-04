@@ -211,6 +211,17 @@ Gatekeeper AI is developed by **[ki Kraft](https://kikraft.at/)**, a non-profit 
 == Changelog ==
 
 = 0.1.1 =
+* **Frontend Provider Loading Fix**
+  - Fixed "Frontend service provider class not found" error by properly organizing namespace structure
+  - Moved files to src/Public_/ directory to match AIPM\Public_ namespace
+  - Added fallback class loading with multiple namespace candidates
+  - Replaced exceptions with graceful error handling and admin notices
+  - No more fatal errors on plugin initialization
+* **REST API Security Hardening**
+  - Enhanced nonce validation for all POST endpoints
+  - Added support for both HTTP_X_WP_NONCE header and _wpnonce parameter
+  - Enforced nonce checks on /settings, /logs/clear, /tools/import, /tools/test-merge
+  - Improved security for REST API operations
 * **Admin Navigation Improvements**
   - Changed to top-level admin menu "Gatekeeper AI" with dashicons-shield-alt icon
   - Added Dashboard and GKAI Debug as submenus under Gatekeeper AI
@@ -232,7 +243,9 @@ Gatekeeper AI is developed by **[ki Kraft](https://kikraft.at/)**, a non-profit 
 * **Testing Infrastructure**
   - Added test-admin-menu.php to verify menu registration
   - Added test-options-sanitizing.php to verify data sanitization
-  - All tests passing
+  - Added test-rest-nonces.php to verify REST API security
+  - Added test-frontend-provider.php to verify class loading
+  - All tests passing (4 test suites)
 
 = 0.2.0 =
 * **Complete Feature Implementation**

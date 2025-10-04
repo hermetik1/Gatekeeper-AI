@@ -80,12 +80,19 @@ class Plugin
      * Register admin functionality
      *
      * @return void
-     * @throws \Exception If admin provider class not found.
      */
     private static function register_admin(): void
     {
         if (!class_exists('AIPM\\Admin\\AdminServiceProvider')) {
-            throw new \Exception('Admin service provider class not found');
+            error_log('Gatekeeper AI: Admin service provider class not found');
+            
+            add_action('admin_notices', function () {
+                printf(
+                    '<div class="notice notice-error"><p><strong>Gatekeeper AI Error:</strong> Admin service provider class not found. Please check that the plugin files are installed correctly.</p></div>',
+                );
+            });
+            
+            return;
         }
 
         add_action('init', [\AIPM\Admin\AdminServiceProvider::class, 'register']);
@@ -95,27 +102,49 @@ class Plugin
      * Register frontend functionality
      *
      * @return void
-     * @throws \Exception If frontend provider class not found.
      */
     private static function register_frontend(): void
     {
-        if (!class_exists('AIPM\\Public_\\FrontendServiceProvider')) {
-            throw new \Exception('Frontend service provider class not found');
+        // Try multiple namespace candidates for frontend service provider
+        $candidates = [
+            'AIPM\\Public_\\FrontendServiceProvider',
+            'AIPM\\Public\\FrontendServiceProvider',
+        ];
+
+        $provider_class = null;
+        foreach ($candidates as $candidate) {
+            if (class_exists($candidate)) {
+                $provider_class = $candidate;
+                break;
+            }
         }
 
-        add_action('init', [\AIPM\Public_\FrontendServiceProvider::class, 'register']);
+        if ($provider_class === null) {
+            error_log('Gatekeeper AI: Frontend service provider class not found. Tried: ' . implode(', ', $candidates));
+            
+            add_action('admin_notices', function () use ($candidates) {
+                printf(
+                    '<div class="notice notice-error"><p><strong>Gatekeeper AI Error:</strong> Frontend service provider class not found. Please check that the plugin files are installed correctly. Tried: %s</p></div>',
+                    esc_html(implode(', ', $candidates))
+                );
+            });
+            
+            return;
+        }
+
+        add_action('init', [$provider_class, 'register']);
     }
 
     /**
      * Register REST API routes
      *
      * @return void
-     * @throws \Exception If REST routes class not found.
      */
     private static function register_rest_api(): void
     {
         if (!class_exists('AIPM\\REST\\Routes')) {
-            throw new \Exception('REST routes class not found');
+            error_log('Gatekeeper AI: REST routes class not found');
+            return;
         }
 
         add_action('rest_api_init', [\AIPM\REST\Routes::class, 'register']);
@@ -125,12 +154,12 @@ class Plugin
      * Register robots.txt handler
      *
      * @return void
-     * @throws \Exception If robots.txt generator class not found.
      */
     private static function register_robots_txt(): void
     {
         if (!class_exists('AIPM\\Policies\\RobotsTxtGenerator')) {
-            throw new \Exception('Robots.txt generator class not found');
+            error_log('Gatekeeper AI: Robots.txt generator class not found');
+            return;
         }
 
         add_action('do_robots', [\AIPM\Policies\RobotsTxtGenerator::class, 'output']);
@@ -140,12 +169,12 @@ class Plugin
      * Register C2PA functionality
      *
      * @return void
-     * @throws \Exception If C2PA media attachment class not found.
      */
     private static function register_c2pa(): void
     {
         if (!class_exists('AIPM\\C2PA\\MediaAttachment')) {
-            throw new \Exception('C2PA media attachment class not found');
+            error_log('Gatekeeper AI: C2PA media attachment class not found');
+            return;
         }
 
         add_action('init', [\AIPM\C2PA\MediaAttachment::class, 'register']);
