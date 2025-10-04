@@ -27,4 +27,8 @@ else {
 }
 register_activation_hook(__FILE__, ['AIPM\\Activation', 'run']);
 register_deactivation_hook(__FILE__, ['AIPM\\Deactivation', 'run']);
-add_action('plugins_loaded', static function () { if (class_exists('AIPM\\Plugin')) { AIPM\\Plugin::init(); }});
+add_action('plugins_loaded', static function () { 
+    if (class_exists('AIPM\\Plugin')) { 
+        AIPM\Plugin::init(); 
+    }
+});
