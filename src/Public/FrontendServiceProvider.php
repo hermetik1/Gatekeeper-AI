@@ -2,6 +2,7 @@
 namespace AIPM\Public_;
 
 use AIPM\Public_\Output\MetaTags;
+use AIPM\Public_\Badges\CredentialBadge;
 use AIPM\Policies\HeadersGenerator;
 
 /**
@@ -21,5 +22,8 @@ class FrontendServiceProvider
         
         // Send X-Robots-Tag headers
         add_action('template_redirect', [HeadersGenerator::class, 'send_headers'], 0);
+        
+        // Register C2PA badge shortcode
+        add_action('init', [CredentialBadge::class, 'register_shortcode']);
     }
 }
