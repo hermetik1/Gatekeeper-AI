@@ -120,4 +120,101 @@ class PolicyManager
 
         return $result;
     }
+
+    /**
+     * Validate policies structure.
+     *
+     * @param array $policies Policies to validate.
+     * @return array Array with 'valid' bool and 'errors' array.
+     */
+    public static function validate(array $policies): array
+    {
+        $errors = [];
+        $known = self::known_bots();
+
+        // Validate global policies
+        if (isset($policies['global'])) {
+            $allow = $policies['global']['allow'] ?? [];
+            $block = $policies['global']['block'] ?? [];
+
+            // Check for unknown bots
+            foreach ($allow as $bot) {
+                if (!in_array($bot, $known, true)) {
+                    $errors[] = "Unknown bot in global allow list: {$bot}";
+                }
+            }
+            foreach ($block as $bot) {
+                if (!in_array($bot, $known, true)) {
+                    $errors[] = "Unknown bot in global block list: {$bot}";
+                }
+            }
+
+            // Check for bots in both lists
+            $intersection = array_intersect($allow, $block);
+            if (!empty($intersection)) {
+                $errors[] = 'Bot(s) cannot be in both allow and block lists: ' . implode(', ', $intersection);
+            }
+        }
+
+        // Validate routes
+        if (isset($policies['routes'])) {
+            foreach ($policies['routes'] as $idx => $route) {
+                $pattern = $route['pattern'] ?? '';
+                if (empty($pattern)) {
+                    $errors[] = "Route #{$idx}: pattern cannot be empty";
+                    continue;
+                }
+
+                // Validate pattern (only * as wildcard)
+                if (preg_match('/[^a-zA-Z0-9\/_\-\*\.]/', $pattern)) {
+                    $errors[] = "Route #{$idx}: pattern contains invalid characters (only alphanumeric, /, -, _, ., * allowed)";
+                }
+
+                $allow = $route['allow'] ?? [];
+                $block = $route['block'] ?? [];
+
+                // Check for unknown bots
+                foreach ($allow as $bot) {
+                    if (!in_array($bot, $known, true)) {
+                        $errors[] = "Route #{$idx}: unknown bot in allow list: {$bot}";
+                    }
+                }
+                foreach ($block as $bot) {
+                    if (!in_array($bot, $known, true)) {
+                        $errors[] = "Route #{$idx}: unknown bot in block list: {$bot}";
+                    }
+                }
+
+                // Check for bots in both lists
+                $intersection = array_intersect($allow, $block);
+                if (!empty($intersection)) {
+                    $errors[] = "Route #{$idx}: bot(s) in both allow and block: " . implode(', ', $intersection);
+                }
+            }
+        }
+
+        return [
+            'valid' => empty($errors),
+            'errors' => $errors
+        ];
+    }
+
+    /**
+     * Normalize pattern for consistent comparison.
+     *
+     * @param string $pattern Pattern to normalize.
+     * @return string Normalized pattern.
+     */
+    public static function normalize_pattern(string $pattern): string
+    {
+        // Ensure leading slash
+        if (!str_starts_with($pattern, '/')) {
+            $pattern = '/' . $pattern;
+        }
+        // Remove trailing slash unless it's the root
+        if ($pattern !== '/' && str_ends_with($pattern, '/')) {
+            $pattern = rtrim($pattern, '/');
+        }
+        return $pattern;
+    }
 }

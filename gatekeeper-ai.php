@@ -3,7 +3,9 @@
  * Plugin Name: Gatekeeper AI
  * Description: Granulare Kontrolle für AI-Crawler + Content-Provenance (C2PA-Light) in WordPress.
  * Version: 0.1.0
- * Author: Roman & Team
+ * Author: ki Kraft
+ * Author URI: https://kikraft.at/
+ * Plugin URI: https://kikraft.at/
  * Text Domain: gatekeeper-ai
  * Requires PHP: 8.1
  * Requires at least: 6.4

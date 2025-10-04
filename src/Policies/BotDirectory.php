@@ -29,7 +29,7 @@ class BotDirectory
             [
                 'name' => 'Google-Extended',
                 'ua_regex' => '/Google-Extended/i',
-                'docs_url' => 'https://developers.google.com',
+                'docs_url' => 'https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers',
                 'default_action' => 'allow'
             ],
             [
@@ -42,6 +42,24 @@ class BotDirectory
                 'name' => 'Bytespider',
                 'ua_regex' => '/Bytespider/i',
                 'docs_url' => 'https://bytedance.com',
+                'default_action' => 'block'
+            ],
+            [
+                'name' => 'Applebot-Extended',
+                'ua_regex' => '/Applebot-Extended/i',
+                'docs_url' => 'https://support.apple.com/en-us/119829',
+                'default_action' => 'block'
+            ],
+            [
+                'name' => 'CCBot',
+                'ua_regex' => '/CCBot/i',
+                'docs_url' => 'https://commoncrawl.org/ccbot',
+                'default_action' => 'block'
+            ],
+            [
+                'name' => 'Amazonbot',
+                'ua_regex' => '/Amazonbot/i',
+                'docs_url' => 'https://developer.amazon.com/amazonbot',
                 'default_action' => 'block'
             ],
         ];

@@ -1,6 +1,15 @@
 {
-  "name": "roman/gatekeeper-ai",
+  "name": "kikraft/gatekeeper-ai",
   "type": "wordpress-plugin",
+  "description": "AI bot access control and content provenance for WordPress",
+  "homepage": "https://kikraft.at/",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "ki Kraft",
+      "homepage": "https://kikraft.at/"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "AIPM\\": "src/"
