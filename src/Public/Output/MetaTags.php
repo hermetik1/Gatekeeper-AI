@@ -21,6 +21,12 @@ class MetaTags
             return;
         }
         
+        // Output Schema.org Organization JSON-LD on front page (once)
+        if (is_front_page() && !did_action('gkai_schema_org_output')) {
+            self::output_schema_org();
+            do_action('gkai_schema_org_output'); // Prevent duplicate output
+        }
+        
         // Get current path and post ID
         $path = self::get_current_path();
         $post_id = self::get_current_post_id();
@@ -41,6 +47,30 @@ class MetaTags
                 echo '<meta name="' . $bot_safe . '" content="noindex, nofollow" />' . "\n";
             }
         }
+    }
+    
+    /**
+     * Output Schema.org Organization JSON-LD.
+     * Only called once on front page.
+     * 
+     * @todo Add logo, sameAs (social media), and other organization properties
+     *
+     * @return void
+     */
+    private static function output_schema_org(): void
+    {
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => 'ki Kraft',
+            'url' => 'https://kikraft.at/'
+            // @todo Add logo, sameAs (social profiles), contactPoint, etc.
+        ];
+        
+        echo '<!-- Gatekeeper AI - Schema.org Organization -->' . "\n";
+        echo '<script type="application/ld+json">' . "\n";
+        echo wp_json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . "\n";
+        echo '</script>' . "\n";
     }
     
     /**

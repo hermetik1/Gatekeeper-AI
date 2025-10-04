@@ -12,6 +12,7 @@
         const [activeTab, setActiveTab] = useState('policies');
         const [saving, setSaving] = useState(false);
         const [message, setMessage] = useState(null);
+        const [showAbout, setShowAbout] = useState(false);
 
         // Load initial data
         useEffect(() => {
@@ -85,7 +86,65 @@
         }
 
         return h('div', { className: 'wrap gkai-settings' },
-            h('h1', null, __('Gatekeeper AI Settings', 'gatekeeper-ai')),
+            // Header with branding
+            h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' } },
+                h('h1', { style: { margin: 0 } },
+                    __('Gatekeeper AI', 'gatekeeper-ai'),
+                    h('span', { 
+                        style: { 
+                            fontSize: '0.7em', 
+                            fontWeight: 'normal', 
+                            color: '#757575', 
+                            marginLeft: '10px' 
+                        },
+                        'aria-label': __('Developed by ki Kraft', 'gatekeeper-ai')
+                    }, __('by ki Kraft', 'gatekeeper-ai'))
+                ),
+                // About popover button
+                h('button', {
+                    className: 'button button-small',
+                    onClick: () => setShowAbout(!showAbout),
+                    'aria-expanded': showAbout,
+                    'aria-label': __('About Gatekeeper AI', 'gatekeeper-ai')
+                }, __('About', 'gatekeeper-ai'))
+            ),
+            
+            // About popover
+            showAbout && h('div', {
+                className: 'notice notice-info',
+                style: { marginTop: '10px', marginBottom: '20px', position: 'relative' }
+            },
+                h('button', {
+                    type: 'button',
+                    className: 'notice-dismiss',
+                    onClick: () => setShowAbout(false),
+                    'aria-label': __('Close', 'gatekeeper-ai')
+                }, h('span', { className: 'screen-reader-text' }, __('Close', 'gatekeeper-ai'))),
+                h('p', null,
+                    h('strong', null, __('Gatekeeper AI', 'gatekeeper-ai')),
+                    ' — ',
+                    __('Granular control for AI crawlers with content provenance.', 'gatekeeper-ai')
+                ),
+                h('p', null,
+                    __('Developed and maintained by', 'gatekeeper-ai'),
+                    ' ',
+                    h('strong', null, 'ki Kraft'),
+                    ', ',
+                    __('a non-profit organization based in Austria.', 'gatekeeper-ai')
+                ),
+                h('p', null,
+                    h('a', {
+                        href: 'https://kikraft.at/',
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                        className: 'button button-small'
+                    }, 
+                        __('Visit ki Kraft', 'gatekeeper-ai'),
+                        ' ',
+                        h('span', { className: 'dashicons dashicons-external', style: { fontSize: '16px', marginTop: '4px' } })
+                    )
+                )
+            ),
             
             // Tab navigation
             h('nav', { className: 'nav-tab-wrapper' },
