@@ -27,7 +27,13 @@ class FrontendServiceProvider
         // Register C2PA badge shortcode
         add_action('init', [CredentialBadge::class, 'register_shortcode']);
         
-        // Register bot detection and logging middleware
-        BotDetectionMiddleware::register();
+        // Register bot detection and logging middleware (try both namespaces)
+        if (class_exists('AIPM\\Public\\BotDetectionMiddleware')) {
+            \AIPM\Public\BotDetectionMiddleware::register();
+        } elseif (class_exists('AIPM\\Public_\\BotDetectionMiddleware')) {
+            \AIPM\Public_\BotDetectionMiddleware::register();
+        } else {
+            error_log('Gatekeeper AI: BotDetectionMiddleware class not found');
+        }
     }
 }
