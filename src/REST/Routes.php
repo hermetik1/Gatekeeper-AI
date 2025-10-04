@@ -27,7 +27,9 @@ class Routes
             ],
             [
                 'methods' => 'POST',
-                'permission_callback' => [self::class, 'can_manage'],
+                'permission_callback' => function () {
+                    return self::can_manage() && Nonces::check();
+                },
                 'callback' => function ($request) {
                     $data = $request->get_json_params() ?: [];
                     
@@ -109,7 +111,9 @@ class Routes
         // Clear logs endpoint
         register_rest_route('aipm/v1', '/logs/clear', [
             'methods' => 'POST',
-            'permission_callback' => [self::class, 'can_manage'],
+            'permission_callback' => function () {
+                return self::can_manage() && Nonces::check();
+            },
             'callback' => function () {
                 $success = \AIPM\Logging\AccessLogger::clear_logs();
                 return ['success' => $success];
@@ -119,7 +123,9 @@ class Routes
         // Test merge endpoint
         register_rest_route('aipm/v1', '/tools/test-merge', [
             'methods' => 'POST',
-            'permission_callback' => [self::class, 'can_manage'],
+            'permission_callback' => function () {
+                return self::can_manage() && Nonces::check();
+            },
             'callback' => function ($request) {
                 $params = $request->get_json_params() ?: [];
                 $path = $params['path'] ?? '/';
@@ -152,7 +158,9 @@ class Routes
         // Import policies endpoint
         register_rest_route('aipm/v1', '/tools/import', [
             'methods' => 'POST',
-            'permission_callback' => [self::class, 'can_manage'],
+            'permission_callback' => function () {
+                return self::can_manage() && Nonces::check();
+            },
             'callback' => function ($request) {
                 $data = $request->get_json_params() ?: [];
                 

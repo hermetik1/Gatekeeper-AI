@@ -43,6 +43,30 @@ fi
 TOTAL_TESTS=$((TOTAL_TESTS + 1))
 echo ""
 
+# Run REST nonce tests
+echo "Running REST nonce tests..."
+if php tests/test-rest-nonces.php; then
+    echo -e "${GREEN}✓ REST nonce tests passed${NC}"
+    PASSED_TESTS=$((PASSED_TESTS + 1))
+else
+    echo -e "${RED}✗ REST nonce tests failed${NC}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+echo ""
+
+# Run frontend provider loading tests
+echo "Running frontend provider loading tests..."
+if php tests/test-frontend-provider.php; then
+    echo -e "${GREEN}✓ Frontend provider loading tests passed${NC}"
+    PASSED_TESTS=$((PASSED_TESTS + 1))
+else
+    echo -e "${RED}✗ Frontend provider loading tests failed${NC}"
+    FAILED_TESTS=$((FAILED_TESTS + 1))
+fi
+TOTAL_TESTS=$((TOTAL_TESTS + 1))
+echo ""
+
 # Summary
 echo "================================"
 echo "Test Summary"
