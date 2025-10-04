@@ -20,6 +20,9 @@ class AdminServiceProvider
         // Register settings page
         add_action('admin_menu', [SettingsPage::class, 'menu']);
         
+        // Register debug page
+        add_action('admin_menu', [DebugPage::class, 'menu']);
+        
         // Enqueue admin assets
         add_action('admin_enqueue_scripts', [SettingsPage::class, 'assets']);
         
@@ -28,5 +31,8 @@ class AdminServiceProvider
         
         // Save post metabox data
         add_action('save_post', ['AIPM\\Admin\\MetaBoxes\\PostPolicyMetaBox', 'save']);
+        
+        // Handle debug page AJAX actions
+        DebugPage::handle_ajax();
     }
 }
