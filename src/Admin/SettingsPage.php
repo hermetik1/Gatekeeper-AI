@@ -17,9 +17,22 @@ class SettingsPage
      */
     public static function menu(): void
     {
-        add_management_page(
+        // Add top-level menu
+        add_menu_page(
             __('Gatekeeper AI', 'gatekeeper-ai'),
             __('Gatekeeper AI', 'gatekeeper-ai'),
+            'manage_options',
+            self::SLUG,
+            [self::class, 'render'],
+            'dashicons-shield-alt',
+            30
+        );
+
+        // Add Dashboard submenu (points to same callback as top-level)
+        add_submenu_page(
+            self::SLUG,
+            __('Dashboard', 'gatekeeper-ai'),
+            __('Dashboard', 'gatekeeper-ai'),
             'manage_options',
             self::SLUG,
             [self::class, 'render']
@@ -34,7 +47,13 @@ class SettingsPage
      */
     public static function assets($hook): void
     {
-        if ($hook !== 'tools_page_' . self::SLUG) {
+        // Accept both toplevel and submenu hooks
+        $valid_hooks = [
+            'toplevel_page_' . self::SLUG,
+            self::SLUG . '_page_' . self::SLUG
+        ];
+
+        if (!in_array($hook, $valid_hooks, true)) {
             return;
         }
 
@@ -51,6 +70,13 @@ class SettingsPage
             ['wp-element', 'wp-api-fetch', 'wp-i18n', 'wp-components'],
             GKAI_VERSION,
             true
+        );
+
+        // Set script translations for i18n
+        wp_set_script_translations(
+            'gatekeeper-ai-admin',
+            'gatekeeper-ai',
+            dirname(GKAI_FILE) . '/languages'
         );
 
         wp_localize_script('gatekeeper-ai-admin', 'GKAI', [
