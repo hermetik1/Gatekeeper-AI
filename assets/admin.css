@@ -1,1 +1,54 @@
-/* admin */
+/* Gatekeeper AI Admin Styles */
+
+.gkai-settings {
+    max-width: 1200px;
+}
+
+.gkai-loading {
+    padding: 20px;
+    text-align: center;
+}
+
+.gkai-tab-content {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #c3c4c7;
+    border-top: none;
+}
+
+.gkai-bot-lists {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.gkai-bot-lists > div {
+    flex: 1;
+    background: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+}
+
+.gkai-bot-checkboxes label {
+    display: block;
+    margin-bottom: 8px;
+    padding: 4px 0;
+}
+
+.gkai-bot-checkboxes input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.gkai-logs-tab .dashicons {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .gkai-bot-lists {
+        flex-direction: column;
+    }
+}
