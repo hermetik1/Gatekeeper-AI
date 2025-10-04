@@ -33,6 +33,15 @@ Gatekeeper AI gives you complete control over which AI bots can access your cont
 * React-based settings page with tabs (Policies | C2PA | Logs)
 * Per-post metabox for fine-grained control
 * REST API integration with proper security
+* **Debug Dashboard** with comprehensive logging and health checks
+
+**Debug & Error Handling:**
+* Multi-level logging system (ERROR, WARNING, INFO, DEBUG)
+* Debug dashboard with log viewer and filtering
+* System information and health checks
+* Automatic error detection during activation
+* Debug toolbar for developers
+* Performance profiling tools
 
 = Policy Priority =
 
@@ -79,6 +88,26 @@ Manifests are stored as JSON files in `/wp-content/uploads/gatekeeper-ai/{attach
 
 Use the shortcode `[gkai_badge id="123"]` where 123 is the attachment ID. You can also use the helper function `\AIPM\Public_\Badges\CredentialBadge::get_badge($attachment_id)` in your theme.
 
+= How do I access the debug dashboard? =
+
+Navigate to Tools → GKAI Debug in your WordPress admin. The debug dashboard provides:
+* Log viewer with filtering and search
+* System information
+* Health checks for plugin dependencies
+* Debug report export
+
+= What should I do if plugin activation fails? =
+
+The plugin now includes comprehensive error handling. If activation fails:
+1. Check the error message displayed
+2. Review debug logs at `wp-content/uploads/gatekeeper-ai-logs/debug.log`
+3. Ensure minimum requirements are met (WordPress 6.4+, PHP 8.1+)
+4. Export a debug report from Tools → GKAI Debug and report the issue
+
+= How do I enable debug mode? =
+
+Debug mode is automatically enabled when WP_DEBUG is enabled in wp-config.php. Additionally, you can access advanced debug features through the Debug Dashboard (Tools → GKAI Debug).
+
 == Screenshots ==
 
 1. Admin settings page with tabs
@@ -87,6 +116,18 @@ Use the shortcode `[gkai_badge id="123"]` where 123 is the attachment ID. You ca
 4. Per-post metabox
 
 == Changelog ==
+
+= 0.1.1 =
+* Added comprehensive debug system
+* Multi-level logging (ERROR, WARNING, INFO, DEBUG)
+* Debug dashboard with log viewer, filtering, and search
+* System information collector
+* Health check utility for dependencies
+* Debug toolbar in admin bar for developers
+* Performance profiling tools
+* Enhanced error handling during plugin activation
+* Automatic version checks (WordPress 6.4+, PHP 8.1+)
+* Safe mode activation with detailed error messages
 
 = 0.1.0 =
 * Initial MVP release
